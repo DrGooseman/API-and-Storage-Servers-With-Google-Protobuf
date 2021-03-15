@@ -20,5 +20,10 @@
        <artifactId>slf4j-log4j12</artifactId>
        <version>1.7.5</version>
    </dependency>
+   <dependency>
+    <groupId>com.google.protobuf</groupId>
+    <artifactId>protobuf-java</artifactId>
+    <version>3.15.5</version>
+</dependency>
  </dependencies>
 </project>
