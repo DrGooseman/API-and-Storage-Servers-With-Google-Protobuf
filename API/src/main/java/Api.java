@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Scanner;
 
 import services.EventService;
 
@@ -18,6 +19,7 @@ public class Api {
 	public static void main(String[] args) {
 		Api api = new Api();
 		
+		api.setupConsoleInput();
 		api.setupServerConnection("localhost", 5000);
 		api.setupRoutes();
 	}
@@ -82,6 +84,32 @@ public class Api {
 				} catch (IOException e) {
 					System.out.println(e.getMessage());
 				}
+			}
+		};
+		thread.start();
+	}
+	
+	/**
+	 * Starts a thread to handle console input for closing the server connection and API.
+	 */
+	public void setupConsoleInput() {
+		Thread thread = new Thread() {
+			public void run() {
+				Scanner scanner = new Scanner(System.in);
+				String inputString;
+				do {
+					System.out.println("Type exit to close the server: ");
+					inputString = scanner.nextLine();
+				} while (!inputString.equals("exit"));
+				System.out.println("API and socket connection terminating...");
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				scanner.close();
+				System.exit(0);
+				return;
 			}
 		};
 		thread.start();
