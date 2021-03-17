@@ -6,7 +6,7 @@ protobuf.util.Long = undefined;
 protobuf.configure();
 
 let message;
-let event;
+let event = null;
 
 exports.saveIncomingEvent = async (conn, data) => {
   try {
