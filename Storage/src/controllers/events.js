@@ -10,9 +10,12 @@ let event = null;
 
 exports.saveIncomingEvent = async (conn, data) => {
   try {
+    console.log("saveIncomingEvent");
     await decodeMessage(data);
-    const err = message.verify(event);
+
     //if message is only partially full, return and wait for the rest of the message
+    if (!event) return;
+    const err = message.verify(event);
     if (err) return;
 
     const newEvent = new Event(event);
@@ -33,10 +36,14 @@ const decodeMessage = async (data) => {
     const decodedMessage = message.decode(data);
     event = message.toObject(decodedMessage);
   } catch (err) {
-    if (!event) event = message.toObject(err.instance);
-    else {
-      const partialEvent = message.toObject(err.instance);
-      event = { ...event, ...partialEvent };
+    if (err instanceof protobuf.util.ProtocolError) {
+      if (!event) event = message.toObject(err.instance);
+      else {
+        const partialEvent = message.toObject(err.instance);
+        event = { ...event, ...partialEvent };
+      }
+    } else {
+      throw new Error("Problem with binary stream. Please resend.");
     }
   }
 };
