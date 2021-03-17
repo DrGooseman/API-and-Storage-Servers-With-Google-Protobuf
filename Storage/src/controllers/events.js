@@ -10,7 +10,6 @@ let event = null;
 
 exports.saveIncomingEvent = async (conn, data) => {
   try {
-    console.log("saveIncomingEvent");
     await decodeMessage(data);
 
     //if message is only partially full, return and wait for the rest of the message
