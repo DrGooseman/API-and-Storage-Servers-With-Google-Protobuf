@@ -1,6 +1,8 @@
 const net = require("net");
 const dotenv = require("dotenv");
 
+const { saveIncomingEvent } = require("./controllers/events");
+
 dotenv.config();
 
 const server = net.createServer();
@@ -10,7 +12,7 @@ server.on("connection", (conn) => {
   conn.write("Connection established.\n");
 
   conn.on("data", (data) => {
-    console.log(data);
+    saveIncomingEvent(conn, data);
   });
 
   conn.once("close", () => {

@@ -3,7 +3,7 @@ syntax = "proto2";
 package models;
 
 message Event {
-  optional int64 timestamp = 1;
-  optional int32 userId = 2;
-  optional string event = 3;
+  required int64 timestamp = 1;
+  required int32 userId = 2;
+  required string event = 3;
 }
