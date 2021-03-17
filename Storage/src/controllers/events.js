@@ -1,5 +1,7 @@
 const protobuf = require("protobufjs");
 
+const Event = require("../models/event.js");
+
 protobuf.util.Long = undefined;
 protobuf.configure();
 
@@ -9,10 +11,17 @@ let event;
 exports.saveIncomingEvent = async (conn, data) => {
   try {
     await decodeMessage(data);
-    //Validate Event against future Event model to check if we have built the whole object
-    //console.log("saveIncomingEvent");
+    const err = message.verify(event);
+    //if message is only partially full, return and wait for the rest of the message
+    if (err) return;
+
+    const newEvent = new Event(event);
+    await newEvent.save();
+
+    console.log("Event saved!");
     console.log(event);
-    //event = undefined;
+    event = null;
+    conn.write("Event saved!\n");
   } catch (err) {
     console.log(`Error: ${err}`);
     conn.write(`Error: ${err}\n`);
